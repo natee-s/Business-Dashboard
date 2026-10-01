@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏥 บ้านยาสุขใจ — Business Dashboard
 
-## Getting Started
+Dashboard สำหรับวิเคราะห์ข้อมูลการขายของร้านยาบ้านยาสุขใจ
 
-First, run the development server:
+## ⚡ วิธีเริ่มใช้งาน
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### ครั้งแรก (Setup)
+```powershell
+cd pharmacy-dashboard
+npm install
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### เริ่ม Dashboard
+```powershell
+npm run start
+# แล้วเปิด http://localhost:3000
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+หรือใช้สคริปต์:
+```powershell
+.\start.ps1
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📊 ฟีเจอร์ทั้งหมด
 
-To learn more about Next.js, take a look at the following resources:
+### 1. KPI Overview
+- ยอดขายรวม, กำไรรวม, จำนวนใบเสร็จ, Gross Margin %
+- แสดงการเปลี่ยนแปลงเทียบกับช่วงก่อนหน้า (% change)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. แนวโน้มยอดขายและกำไร
+- กราฟ Line/Area chart รายวัน หรือ รายเดือน
+- สลับดู Margin % overlay ได้
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3. อัปโหลดข้อมูล
+- ลาก Excel ไฟล์วางได้เลย (drag & drop)
+- ระบบ detect ข้อมูลซ้ำอัตโนมัติ (ไม่ใส่ซ้ำ)
+- ดูประวัติการอัปโหลดได้
+- ลบข้อมูลทั้งหมดได้
 
-## Deploy on Vercel
+### 4. วิเคราะห์สินค้า
+- Top 10 สินค้าขายดีที่สุด (ยอดขาย)
+- Top 10 สินค้า Gross Margin สูงสุด
+- สินค้าขายช้า (Slow Movers)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 5. รูปแบบการขายตามเวลา
+- กราฟรายชั่วโมง (peak hours)
+- กราฟรายวันในสัปดาห์
+- สรุปช่วงเวลา: เช้า/บ่าย/เย็น/กลางคืน
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 6. เปรียบเทียบรายเดือน
+- กราฟ Bar chart 12 เดือนล่าสุด
+- ตาราง MOM (Month-over-Month) % change
+- ไฮไลต์เดือนที่ดีที่สุด
+
+### 7. คาดการณ์อนาคต (Forecasting)
+- คาดการณ์ยอดขายและกำไรล่วงหน้า 30-90 วัน
+- ปรับอัตโนมัติตามปริมาณข้อมูล:
+  - < 60 วัน → คาดการณ์ 14 วัน
+  - 60-179 วัน → คาดการณ์ 30 วัน
+  - 180+ วัน → คาดการณ์ 90 วัน
+- แสดง Confidence band ±15%
+
+### 8. Date Filter
+- Presets: 7 วัน, 30 วัน, 90 วัน, เดือนนี้, เดือนก่อน, ปีนี้, ทั้งหมด
+- กำหนดช่วงเวลาเองได้
+
+---
+
+## 📁 โครงสร้างไฟล์ Excel ที่รองรับ
+
+ไฟล์ .xls หรือ .xlsx จาก POS ที่มี columns:
+
+| Column | ตัวอย่าง |
+|--------|---------|
+| เลขที่ใบเสร็จ/วันที่เงิน | SJ69100010001 |
+| วัน/เวลา | 1/10/2026 08:21 |
+| รหัสสินค้า | IT-0000373 |
+| รายการสินค้า | BIOPHARM LIPZ 28'S |
+| จำนวน | 1 |
+| หน่วย | กล่อง |
+| ราคาต้นทุน/หน่วย | 216.53 |
+| ราคาขาย/หน่วย | 265 |
+| ราคารวม | 265 |
+| ต้นทุนรวม | 216.53 |
+| กำไรรวม | 48.47 |
+
+---
+
+## 🗄️ ข้อมูล
+
+- ฐานข้อมูล SQLite เก็บที่: `db/pharmacy.db`
+- Backup โดย copy ไฟล์ `pharmacy.db` ได้เลย
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 16 + React 19 + Tailwind CSS v4
+- **Charts**: Recharts
+- **Database**: SQLite (better-sqlite3)
+- **Excel Parser**: SheetJS (xlsx)
+- **Forecasting**: Linear Regression + Moving Average

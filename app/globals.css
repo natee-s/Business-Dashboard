@@ -1,26 +1,127 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ===== DARK MODE (default) ===== */
+:root,
+[data-theme="dark"] {
+  --bg-base: #0f1225;
+  --bg-surface: rgba(255, 255, 255, 0.05);
+  --bg-surface-hover: rgba(255, 255, 255, 0.08);
+  --bg-header: rgba(15, 18, 37, 0.85);
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-muted: rgba(255, 255, 255, 0.35);
+  --text-faint: rgba(255, 255, 255, 0.2);
+  --blob-1: rgba(99, 102, 241, 0.12);
+  --blob-2: rgba(168, 85, 247, 0.10);
+  --blob-3: rgba(99, 102, 241, 0.06);
+  --scrollbar-track: rgba(255, 255, 255, 0.03);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.15);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.25);
+  --tooltip-bg: #1a1f35;
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --input-color-scheme: dark;
+  --chart-text: rgba(255, 255, 255, 0.45);
+  --chart-grid: rgba(255, 255, 255, 0.05);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ===== LIGHT MODE ===== */
+[data-theme="light"] {
+  --bg-base: #f0f4ff;
+  --bg-surface: rgba(255, 255, 255, 0.85);
+  --bg-surface-hover: rgba(255, 255, 255, 1);
+  --bg-header: rgba(240, 244, 255, 0.92);
+  --border: rgba(99, 102, 241, 0.15);
+  --border-strong: rgba(99, 102, 241, 0.3);
+  --text-primary: #0f172a;
+  --text-secondary: #374151;
+  --text-muted: #6b7280;
+  --text-faint: #9ca3af;
+  --blob-1: rgba(99, 102, 241, 0.08);
+  --blob-2: rgba(168, 85, 247, 0.06);
+  --blob-3: rgba(99, 102, 241, 0.04);
+  --scrollbar-track: rgba(0, 0, 0, 0.03);
+  --scrollbar-thumb: rgba(0, 0, 0, 0.15);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.25);
+  --tooltip-bg: #ffffff;
+  --input-bg: rgba(255, 255, 255, 0.9);
+  --input-color-scheme: light;
+  --chart-text: #374151;
+  --chart-grid: rgba(0, 0, 0, 0.06);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* ===== BASE ===== */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+}
+
+/* ===== TYPOGRAPHY HELPERS ===== */
+.text-base-primary   { color: var(--text-primary); }
+.text-base-secondary { color: var(--text-secondary); }
+.text-base-muted     { color: var(--text-muted); }
+.text-base-faint     { color: var(--text-faint); }
+
+/* ===== CARD ===== */
+.card-surface {
+  background: var(--bg-surface);
+  border-color: var(--border);
+}
+[data-theme="light"] .card-surface {
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.08), 0 1px 3px rgba(0,0,0,0.06);
+}
+
+/* ===== HEADER ===== */
+.header-surface {
+  background: var(--bg-header);
+  border-color: var(--border);
+}
+
+/* ===== INPUTS ===== */
+input[type="date"] {
+  color-scheme: var(--input-color-scheme);
+  background: var(--input-bg);
+  color: var(--text-primary);
+}
+
+.theme-input {
+  background: var(--input-bg);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+.theme-input::placeholder { color: var(--text-muted); }
+
+/* ===== DROPDOWN / PANEL ===== */
+.theme-panel {
+  background: var(--tooltip-bg);
+  border-color: var(--border);
+}
+[data-theme="light"] .theme-panel {
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.12), 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* ===== RECHARTS ===== */
+.recharts-tooltip-wrapper {
+  outline: none !important;
+}
+.recharts-cartesian-axis-tick-value {
+  fill: var(--chart-text) !important;
+}
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: var(--chart-grid) !important;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+
+/* ===== TRANSITIONS ===== */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
